@@ -20,4 +20,10 @@ class Temperature extends Model
         'port7',
         'port8',
     ];
+
+    // Método para asignar la tabla dinámicamente
+    public function setTableName($sensorName)
+    {
+        $this->setTable($sensorName);
+    }
 }

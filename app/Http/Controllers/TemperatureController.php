@@ -7,7 +7,7 @@ use App\Models\Temperature;
 
 class TemperatureController extends Controller
 {
-    public function store(Request $request)
+    public function store(Request $request, $sensorName)
     {
         $validatedData = $request->validate([
             'port1' => 'required|integer',
@@ -20,7 +20,13 @@ class TemperatureController extends Controller
             'port8' => 'required|integer',
         ]);
 
-        $temperature = Temperature::create($validatedData);
+        $temperature = new Temperature();
+
+        $temperature->setTableName($sensorName);
+
+        $temperature->fill($validatedData);
+
+        $temperature->save();
 
         return response()->json($temperature, 201);
     }

@@ -9,8 +9,7 @@ class TemperatureController extends Controller
 {
     public function store(Request $request)
     {
-        // Validar la solicitud
-        $validated = $request->validate([
+        $validatedData = $request->validate([
             'port1' => 'required|integer',
             'port2' => 'required|integer',
             'port3' => 'required|integer',
@@ -21,9 +20,10 @@ class TemperatureController extends Controller
             'port8' => 'required|integer',
         ]);
 
-        // Crear un nuevo registro en la base de datos
-        $temperature = Temperature::create($validated);
+        $temperature = Temperature::create($validatedData);
 
         return response()->json($temperature, 201);
     }
 }
+
+

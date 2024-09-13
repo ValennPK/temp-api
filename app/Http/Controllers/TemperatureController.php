@@ -10,26 +10,22 @@ class TemperatureController extends Controller
     public function store(Request $request, $sensorName)
     {
         $validatedData = $request->validate([
-            'port1' => 'required|integer',
-            'port2' => 'required|integer',
-            'port3' => 'required|integer',
-            'port4' => 'required|integer',
-            'port5' => 'required|integer',
-            'port6' => 'required|integer',
-            'port7' => 'required|integer',
-            'port8' => 'required|integer',
+            'port1' => 'required|numeric',
+            'port2' => 'required|numeric',
+            'port3' => 'required|numeric',
+            'port4' => 'required|numeric',
+            'port5' => 'required|numeric',
+            'port6' => 'required|numeric',
+            'port7' => 'required|numeric',
+            'port8' => 'required|numeric',
         ]);
-
+        
         $temperature = new Temperature();
-
         $temperature->setTableName($sensorName);
 
-        $temperature->fill($validatedData);
-
-        $temperature->save();
+        $temperature->create($validatedData);
 
         return response()->json($temperature, 201);
     }
 }
-
 

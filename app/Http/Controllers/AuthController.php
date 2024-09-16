@@ -59,7 +59,8 @@ class AuthController extends Controller
         }
 
         // Crear un token para el usuario
-        $token = $user->createToken('Token Name')->plainTextToken;
+        $token = $user->createToken('Token Name', ['scope'], now()->addMinutes(240))->plainTextToken;
+
 
         // Devolver el token en la respuesta
         return response()->json(['token' => $token], 200);

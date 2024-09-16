@@ -22,7 +22,7 @@ use App\Http\Controllers\StatusController;
 
 Route::get('/status', [StatusController::class, 'status']);
 
-
+Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/login', [AuthController::class, 'login']);
 

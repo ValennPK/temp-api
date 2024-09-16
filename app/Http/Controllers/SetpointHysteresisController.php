@@ -9,6 +9,7 @@ class SetpointHysteresisController extends Controller
 {
     public function index($sensorName)
     {
+        
         $setpoints = SetpointHysteresis::where('name', $sensorName)->get();
 
         return response()->json($setpoints, 200);

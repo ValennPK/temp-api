@@ -12,12 +12,22 @@ return new class extends Migration
     public function up()
     {
         Schema::create('setpoint_hysteresis', function (Blueprint $table) {
-            $table->id(); // Crea el campo id autoincremental
-            $table->string('name'); // Crea el campo name de tipo string
-            $table->integer('upper_hyst'); // Crea el campo upper_hyst
-            $table->integer('lower_hyst'); // Crea el campo lower_hyst
-            $table->timestamps(); // Crea los campos created_at y updated_at
-            $table->softDeletes(); // Crea el campo deleted_at para soft deletes
+            $table->id();
+            $table->string('name');
+            $table->float('upper_s2', 8, 2)->after('lower_s1');
+            $table->float('lower_s2', 8, 2)->after('upper_s2');
+            $table->float('upper_s3', 8, 2)->after('lower_s2');
+            $table->float('lower_s3', 8, 2)->after('upper_s3');
+            $table->float('upper_s4', 8, 2)->after('lower_s3');
+            $table->float('lower_s4', 8, 2)->after('upper_s4');
+            $table->float('upper_s5', 8, 2)->after('lower_s4');
+            $table->float('lower_s5', 8, 2)->after('upper_s5');
+            $table->float('upper_s6', 8, 2)->after('lower_s5');
+            $table->float('lower_s6', 8, 2)->after('upper_s6');
+            $table->float('upper_s7', 8, 2)->after('lower_s6');
+            $table->float('lower_s7', 8, 2)->after('upper_s7');
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

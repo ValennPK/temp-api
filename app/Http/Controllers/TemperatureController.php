@@ -25,7 +25,7 @@ class TemperatureController extends Controller
 
         $temperature->create($validatedData);
 
-        return response()->json($temperature, 201);
+        return response()->json($validatedData, 201);
     }
 }
 

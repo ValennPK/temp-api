@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddHasPermissionToUsersTable extends Migration
+class ModifyUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,6 +15,7 @@ class AddHasPermissionToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->boolean('has_permission')->default(false);
+            $table->renameColumn('email', 'username');
         });
     }
 
@@ -27,6 +28,7 @@ class AddHasPermissionToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('has_permission');
+            $table->renameColumn('username', 'email');
         });
     }
 }

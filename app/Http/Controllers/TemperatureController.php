@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 
 class TemperatureController extends Controller
 {
-    public function store(Request $request, $ThermometerName)
+    public function store(Request $request, $sensorName)
     {
 
         $validatedData = $request->validate([
@@ -23,8 +23,8 @@ class TemperatureController extends Controller
             'port8' => 'required|numeric',
         ]);
         
-        if (!Schema::hasTable($ThermometerName)) {
-            Schema::create($ThermometerName, function (Blueprint $table) {
+        if (!Schema::hasTable($sensorName)) {
+            Schema::create($sensorName, function (Blueprint $table) {
                 $table->id();
                 $table->decimal('port1', 6, 3);
                 $table->decimal('port2', 6, 3);
@@ -39,7 +39,7 @@ class TemperatureController extends Controller
             });
         }
 
-        DB::table($ThermometerName)->insert([
+        DB::table($sensorName)->insert([
             'port1' => $request->input('port1'),
             'port2' => $request->input('port2'),
             'port3' => $request->input('port3'),

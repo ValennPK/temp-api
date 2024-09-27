@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 
 class TemperatureController extends Controller
 {
-    public function store(Request $request, $sensorName)
+    public function store(Request $request, $ThermometerName)
     {
 
         $validatedData = $request->validate([
@@ -23,8 +23,8 @@ class TemperatureController extends Controller
             'port8' => 'required|numeric',
         ]);
         
-        if (!Schema::hasTable($sensorName)) {
-            Schema::create($sensorName, function (Blueprint $table) {
+        if (!Schema::hasTable($ThermometerName)) {
+            Schema::create($ThermometerName, function (Blueprint $table) {
                 $table->id();
                 $table->decimal('port1', 6, 3);
                 $table->decimal('port2', 6, 3);
@@ -39,7 +39,7 @@ class TemperatureController extends Controller
             });
         }
 
-        DB::table($sensorName)->insert([
+        DB::table($ThermometerName)->insert([
             'port1' => $request->input('port1'),
             'port2' => $request->input('port2'),
             'port3' => $request->input('port3'),
@@ -55,17 +55,3 @@ class TemperatureController extends Controller
         return response()->json($validatedData, 201);
     }
 }
-
-// Schema::create($sensorName, function (Blueprint $table) {
-//     $table->id();
-//     $table->double('port1');
-//     $table->double('port2');
-//     $table->double('port3');
-//     $table->double('port4');
-//     $table->double('port5');
-//     $table->double('port6');
-//     $table->double('port7');
-//     $table->double('port8');
-//     $table->timestamps();
-//     $table->softDeletes();
-// });

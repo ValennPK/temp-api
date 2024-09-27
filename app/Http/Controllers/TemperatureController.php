@@ -82,7 +82,7 @@ class TemperatureController extends Controller
         //     if ($value > $setpoint->upper_limit || $value < $setpoint->lower_limit) {
         //         DB::table('excursions')->insert([
         //             'thermometer_name' => $ThermometerName,
-        //             'sensor_name' => $port,
+        //             'port_name' => $port,
         //             'value' => $value,
         //             'created_at' => now(),
         //             'updated_at' => now(),
@@ -93,6 +93,57 @@ class TemperatureController extends Controller
 
 
         return response()->json($validatedData, 201);
+    }
+
+
+    public function index($ThermometerName, $days)
+    {
+        $temperatures = DB::table($ThermometerName)->where('created_at', '>=', now()->subDays($days))->get();
+        
+        return response()->json($temperatures, 200);
+    }
+
+    public function index_port($ThermometerName, $days, $PortName)
+    {     
+        $temperatures = DB::table($ThermometerName)->select($PortName)->where('created_at', '>=', now()->subDays($days))->get();
+
+        return response()->json($temperatures, 200);
+    }
+
+    public function last($ThermometerName)
+    {
+        if (!Schema::hasTable($ThermometerName)) {
+            return response()->json(['message' => 'La tabla no existe'], 404);
+        }
+
+        
+        $last = DB::table($ThermometerName)->orderBy('created_at', 'desc')->latest('created_at')->first();
+
+        return response()->json($last, 200);
+    }
+
+    public function last_port($ThermometerName, $PortName)
+    {
+        if (!Schema::hasTable($ThermometerName)) {
+            return response()->json(['message' => 'La tabla no existe'], 404);
+        }
+
+        if (!Schema::hasColumn($ThermometerName, $PortName)) {
+            return response()->json(['message' => 'La columna no existe'], 404);
+        }
+        
+        $last = DB::table($ThermometerName)->orderBy('created_at', 'desc')->latest('created_at')->first();
+
+        $response = [
+            'id' => $last->id,
+            $PortName => $last->{$PortName},
+            'created_at' => $last->created_at,
+            'updated_at' => $last->updated_at,
+            'deleted_at' => $last->deleted_at,
+        ];
+
+
+        return response()->json($response, 200);
     }
 }
 

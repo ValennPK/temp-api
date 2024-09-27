@@ -27,15 +27,22 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/data/{ThermometerName}/{days}', [TemperatureController::class, 'index']);
 
-Route::get('/data/{ThermometerName}/{days}/sensor/{sensor_id}', [TemperatureController::class, 'index_sensor']);
+Route::get('/data/index/{ThermometerName}/{days}', [TemperatureController::class, 'index']);
+
+Route::get('/data/index_port/{ThermometerName}/{days}/{PortName}', [TemperatureController::class, 'index_port']);
 
 Route::middleware('auth:sanctum')->post('/{ThermometerName}/temperatures', [TemperatureController::class, 'store']);
+
+Route::get('/data/last/{ThermometerName}', [TemperatureController::class, 'last']);
+
+Route::get('/data/last/{ThermometerName}/{PortName}', [TemperatureController::class, 'last_port']);
+
 
 Route::middleware('auth:sanctum')->get('/{ThermometerName}/setpoints', [SetpointHysteresisController::class, 'index']);
 
 Route::middleware('auth:sanctum')->post('/{ThermometerName}/setpoints', [SetpointHysteresisController::class, 'store']);
+
 
 Route::get('/stat/{ThermometerName}/{days}', [StatController::class, 'index']);
 

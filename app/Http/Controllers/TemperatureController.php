@@ -95,37 +95,39 @@ class TemperatureController extends Controller
         return response()->json($validatedData, 201);
     }
 
-
     public function index($ThermometerName, $days)
     {
         if (!Schema::hasTable($ThermometerName)) {
             return response()->json(['message' => 'La tabla no existe'], 404);
         }
-
-        $temperatures = DB::table($ThermometerName)->where('created_at', '>=', now()->subDays($days))->get();
-
+    
+        $temperatures = DB::table($ThermometerName)
+            ->where('created_at', '>=', now()->subDays($days))
+            ->orderBy('created_at', 'desc')
+            ->get();
+    
         if ($temperatures->isEmpty()) {
             return response()->json(['message' => 'No se encontraron datos'], 404);
         }
-
-        $response = [];
-
+    
+        $allTemperatures = [];
+    
         foreach ($temperatures as $temperature) {
             foreach (['port1', 'port2', 'port3', 'port4', 'port5', 'port6', 'port7'] as $port) {
-                if (!isset($response[$port])) {
-                    $response[$port] = [
-                        'name' => $ThermometerName,
-                        'port' => $port,
-                        'valor' => $temperature->{$port},
-                        'entry_id' => 0 , //$temperature->id,
-                        'read_at' => $temperature->created_at,
-                        'status' => 0,
-                    ];
-                }
+               
+                $allTemperatures[] = [
+                    'name' => $ThermometerName,
+                    'port' => $port,
+                    'valor' => $temperature->{$port},
+                    'entry_id' => $temperature->id,
+                    'read_at' => $temperature->created_at,
+                    'status' => 0,
+                ];
             }
         }
-        
-        return response()->json($response, 200);
+    
+       
+        return response()->json($allTemperatures, 200);
     }
 
     public function index_port($ThermometerName, $days, $PortName)
@@ -144,29 +146,21 @@ class TemperatureController extends Controller
             return response()->json(['message' => 'No se encontraron datos'], 404);
         }
 
-        // $response = $temperatures->map(function ($temperature) use ($PortName) {
-        //     return [
-        //         'id' => $temperature->id,
-        //         $PortName => $temperature->{$PortName},
-        //         'created_at' => $temperature->created_at,
-        //         'updated_at' => $temperature->updated_at,
-        //         'deleted_at' => $temperature->deleted_at,
-        //     ];
-        // });
-
-        $response = [];
-
+        $portTemperatures = [];
+    
         foreach ($temperatures as $temperature) {
-            $response[] = [
+            $portTemperatures[] = [
                 'name' => $ThermometerName,
                 'port' => $PortName,
                 'valor' => $temperature->{$PortName},
-                'entry_id' => 0, //$temperature->id,
+                'entry_id' => $temperature->id,
                 'read_at' => $temperature->created_at,
                 'status' => 0,
             ];
+            
         }
-        return response()->json($response, 200);
+
+        return response()->json($portTemperatures, 200);
     }
 
     public function last($ThermometerName)

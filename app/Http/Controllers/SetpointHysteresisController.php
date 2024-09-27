@@ -19,18 +19,16 @@ class SetpointHysteresisController extends Controller
 
     public function store(Request $request, $sensorName)
     {
-    // Validar el sensorName
+    
     $validator = Validator::make(
         ['sensorName' => $sensorName], 
         ['sensorName' => 'required|string|max:255']
     );
 
-    // Verificar si la validación falla para sensorName
     if ($validator->fails()) {
         return response()->json($validator->errors(), 422);
     }
 
-    // Validar los demás datos en la solicitud
     $validatedData = $request->validate([
         'upper_s1' => 'required|numeric',
         'lower_s1' => 'required|numeric',
@@ -48,7 +46,6 @@ class SetpointHysteresisController extends Controller
         'lower_s7' => 'required|numeric',
     ]);
 
-    // Realizar validaciones adicionales sobre $validatedData
     $validator = Validator::make($validatedData, []);
 
     $validator->after(function ($validator) use ($validatedData) {
@@ -56,13 +53,11 @@ class SetpointHysteresisController extends Controller
             $upper = $validatedData['upper_s' . $i];
             $lower = $validatedData['lower_s' . $i];
 
-            // Verificar que la diferencia sea al menos de 4 grados
             if (($upper - $lower) < 4) {
                 $validator->errors()->add('upper_s' . $i, 'La diferencia entre upper_s' . $i . ' y lower_s' . $i . ' debe ser al menos 4 grados.');
                 return response()->json($validator->errors(), 422);
             }
 
-            // Verificar que lower no sea mayor que upper
             if ($lower > $upper) {
                 $validator->errors()->add('lower_s' . $i, 'El valor de lower no puede ser mayor que upper en el sensor ' . $i . '.');
                 return response()->json($validator->errors(), 422);

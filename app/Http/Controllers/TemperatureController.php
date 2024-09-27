@@ -98,16 +98,46 @@ class TemperatureController extends Controller
 
     public function index($ThermometerName, $days)
     {
+        if (!Schema::hasTable($ThermometerName)) {
+            return response()->json(['message' => 'La tabla no existe'], 404);
+        }
+
         $temperatures = DB::table($ThermometerName)->where('created_at', '>=', now()->subDays($days))->get();
+
+        if ($temperatures->isEmpty()) {
+            return response()->json(['message' => 'No se encontraron datos'], 404);
+        }
         
         return response()->json($temperatures, 200);
     }
 
     public function index_port($ThermometerName, $days, $PortName)
     {     
-        $temperatures = DB::table($ThermometerName)->select($PortName)->where('created_at', '>=', now()->subDays($days))->get();
+        if (!Schema::hasTable($ThermometerName)) {
+            return response()->json(['message' => 'La tabla no existe'], 404);
+        }
 
-        return response()->json($temperatures, 200);
+        if (!Schema::hasColumn($ThermometerName, $PortName)) {
+            return response()->json(['message' => 'La columna no existe'], 404);
+        }
+
+        $temperatures = DB::table($ThermometerName)->where('created_at', '>=', now()->subDays($days))->get();
+
+        if ($temperatures->isEmpty()) {
+            return response()->json(['message' => 'No se encontraron datos'], 404);
+        }
+
+        $response = $temperatures->map(function ($temperature) use ($PortName) {
+            return [
+                'id' => $temperature->id,
+                $PortName => $temperature->{$PortName},
+                'created_at' => $temperature->created_at,
+                'updated_at' => $temperature->updated_at,
+                'deleted_at' => $temperature->deleted_at,
+            ];
+        });
+
+        return response()->json($response, 200);
     }
 
     public function last($ThermometerName)
@@ -118,6 +148,10 @@ class TemperatureController extends Controller
 
         
         $last = DB::table($ThermometerName)->orderBy('created_at', 'desc')->latest('created_at')->first();
+
+        if ($last->isEmpty()) {
+            return response()->json(['message' => 'No se encontraron datos'], 404);
+        }
 
         return response()->json($last, 200);
     }
@@ -133,6 +167,11 @@ class TemperatureController extends Controller
         }
         
         $last = DB::table($ThermometerName)->orderBy('created_at', 'desc')->latest('created_at')->first();
+
+        if ($last->isEmpty()) {
+            return response()->json(['message' => 'No se encontraron datos'], 404);
+        }
+
 
         $response = [
             'id' => $last->id,

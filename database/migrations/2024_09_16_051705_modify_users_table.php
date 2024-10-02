@@ -15,7 +15,6 @@ class ModifyUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->boolean('has_permission')->default(false);
-            $table->renameColumn('email', 'username');
         });
     }
 
@@ -28,7 +27,6 @@ class ModifyUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('has_permission');
-            $table->renameColumn('username', 'email');
         });
     }
 }

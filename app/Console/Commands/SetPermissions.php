@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\User;
+use App\Models\Thermometer;
 
 class SetPermissions extends Command
 {
@@ -29,7 +29,7 @@ class SetPermissions extends Command
         $username = $this->argument('username');
         $status = $this->argument('status');
 
-        $user = User::where('username', $username)->first();
+        $user = Thermometer::where('username', $username)->first();
 
         if (!$user) {
             $this->error('User not found.');

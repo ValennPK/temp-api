@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
+use App\Models\Thermometer;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,7 +14,6 @@ class AuthController extends Controller
     {
         // Validar los datos de entrada
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
             'password' => 'required|string|min:8',
         ]);
@@ -24,13 +23,12 @@ class AuthController extends Controller
         }
 
         // Crear el usuario
-        $user = User::create([
-            'name' => $request->name,
+        $thermometer = Thermometer::create([
             'username' => $request->username,
             'password' => Hash::make($request->password),
         ]);
 
-        return response()->json(['message' => 'User created successfully', $user], 201);
+        return response()->json(['message' => 'User created successfully', $thermometer], 201);
     }
 
 
@@ -47,19 +45,19 @@ class AuthController extends Controller
         }
 
         // Buscar el usuario por email
-        $user = User::where('username', $request->username)->first();
+        $thermometer = Thermometer::where('username', $request->username)->first();
 
         // Verificar el usuario y la contraseña
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (!$thermometer || !Hash::check($request->password, $thermometer->password)) {
             return response()->json(['error' => 'Invalid credentials'], 401);
         }
 
-        if ($user->has_permission != true) {
+        if ($thermometer->has_permission != true) {
             return response()->json(['error' => 'You do not have permission'], 401);
         }
 
         // Crear un token para el usuario
-        $token = $user->createToken('Token Name', ['scope'], now()->addMinutes(240))->plainTextToken;
+        $token = $thermometer->createToken('Token Name', ['scope'], now()->addMinutes(240))->plainTextToken;
 
 
         // Devolver el token en la respuesta

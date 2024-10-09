@@ -15,27 +15,28 @@ class TemperatureController extends Controller
     {
 
         $validatedData = $request->validate([
-            'port1' => 'required|numeric',
-            'port2' => 'required|numeric',
-            'port3' => 'required|numeric',
-            'port4' => 'required|numeric',
-            'port5' => 'required|numeric',
-            'port6' => 'required|numeric',
-            'port7' => 'required|numeric',
-            'port8' => 'required|numeric',
+            'port1' => 'numeric',
+            'port2' => 'numeric',
+            'port3' => 'numeric',
+            'port4' => 'numeric',
+            'port5' => 'numeric',
+            'port6' => 'numeric',
+            'port7' => 'numeric',
+            'port8' => 'numeric',
         ]);
 
         
         if (!Schema::hasTable($ThermometerName)) {
             Schema::create($ThermometerName, function (Blueprint $table) {
                 $table->id();
-                $table->decimal('port1', 6, 3);
-                $table->decimal('port2', 6, 3);
-                $table->decimal('port3', 6, 3);
-                $table->decimal('port4', 6, 3);
-                $table->decimal('port5', 6, 3);
-                $table->decimal('port6', 6, 3);
-                $table->decimal('port7', 6, 3);
+                $table->decimal('port1', 6, 3)->nullable();
+                $table->decimal('port2', 6, 3)->nullable();
+                $table->decimal('port3', 6, 3)->nullable();
+                $table->decimal('port4', 6, 3)->nullable();
+                $table->decimal('port5', 6, 3)->nullable();
+                $table->decimal('port6', 6, 3)->nullable();
+                $table->decimal('port7', 6, 3)->nullable();
+                $table->decimal('port8', 6, 3)->nullable();
                 $table->timestamps();
                 $table->softDeletes();
             });
@@ -49,6 +50,7 @@ class TemperatureController extends Controller
             'port5' => $request->input('port5'),
             'port6' => $request->input('port6'),
             'port7' => $request->input('port7'),
+            'port8' => $request->input('port8'),
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -113,16 +115,18 @@ class TemperatureController extends Controller
         $allTemperatures = [];
     
         foreach ($temperatures as $temperature) {
-            foreach (['port1', 'port2', 'port3', 'port4', 'port5', 'port6', 'port7'] as $port) {
+            foreach (['port1', 'port2', 'port3', 'port4', 'port5', 'port6', 'port7', 'port8'] as $port) {
                
-                $allTemperatures[] = [
-                    'name' => $ThermometerName,
-                    'port' => $port,
-                    'valor' => $temperature->{$port},
-                    'entry_id' => $temperature->id,
-                    'read_at' => $temperature->created_at,
-                    'status' => 0,
-                ];
+                if ($temperature->{$port} != null) {
+                    $allTemperatures[] = [
+                        'name' => $ThermometerName,
+                        'port' => $port,
+                        'valor' => $temperature->{$port},
+                        'entry_id' => $temperature->id,
+                        'read_at' => $temperature->created_at,
+                        'status' => 0,
+                    ];
+                }
             }
         }
     
@@ -149,14 +153,16 @@ class TemperatureController extends Controller
         $portTemperatures = [];
     
         foreach ($temperatures as $temperature) {
-            $portTemperatures[] = [
-                'name' => $ThermometerName,
-                'port' => $PortName,
-                'valor' => $temperature->{$PortName},
-                'entry_id' => $temperature->id,
-                'read_at' => $temperature->created_at,
-                'status' => 0,
-            ];
+            if ($temperature->{$PortName} != null) {
+                $portTemperatures[] = [
+                    'name' => $ThermometerName,
+                    'port' => $PortName,
+                    'valor' => $temperature->{$PortName},
+                    'entry_id' => $temperature->id,
+                    'read_at' => $temperature->created_at,
+                    'status' => 0,
+                ];
+            }
             
         }
 
@@ -172,7 +178,7 @@ class TemperatureController extends Controller
         
         $last = DB::table($ThermometerName)->orderBy('created_at', 'desc')->latest('created_at')->first();
 
-        if ($last->isEmpty()) {
+        if ($last==null ) {
             return response()->json(['message' => 'No se encontraron datos'], 404);
         }
 
@@ -191,7 +197,7 @@ class TemperatureController extends Controller
         
         $last = DB::table($ThermometerName)->orderBy('created_at', 'desc')->latest('created_at')->first();
 
-        if ($last->isEmpty()) {
+        if ($last==null ) {
             return response()->json(['message' => 'No se encontraron datos'], 404);
         }
 

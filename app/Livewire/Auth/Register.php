@@ -19,9 +19,9 @@ class Register extends Component
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8|confirmed',
         ]);
-
-        //dump($this->name, $this->email, $this->password);
     
+        //dd($this->name, $this->email, $this->password);
+
         User::create([
             'name' => $this->name,
             'email' => $this->email,
@@ -29,7 +29,7 @@ class Register extends Component
         ]);
 
         session()->flash('message', 'Usuario registrado exitosamente.');
-        return redirect()->route('login');
+        return redirect()->route('welcome');
     }
 
     public function render()

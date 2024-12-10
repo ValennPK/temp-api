@@ -14,7 +14,7 @@ class AuthController extends Controller
     {
         // Validar los datos de entrada
         $validator = Validator::make($request->all(), [
-            'username' => 'required|string|max:255|unique:users',
+            'username' => 'required|string|max:255|unique:thermometers',
             'password' => 'required|string|min:8',
         ]);
 
@@ -28,7 +28,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return response()->json(['message' => 'User created successfully', $thermometer], 201);
+        return response()->json(['message' => 'Thermomether created successfully', $thermometer], 201);
     }
 
 

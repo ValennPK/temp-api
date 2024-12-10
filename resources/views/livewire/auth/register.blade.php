@@ -1,7 +1,7 @@
 <div>
     <form class="authform" wire:submit.prevent="register">
         @csrf
-        <h2>Registrarse</h2>
+        <h2 class="authform_h2">Registrarse</h2>
         <div class="authform_div">
             <label for="name">Nombre:</label>
             <input class="authform_div-input" type="text" id="name" wire:model="name" required>

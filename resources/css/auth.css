@@ -104,3 +104,8 @@ button:hover {
     cursor: pointer;
     width: 100%;
 }
+
+.authform_h2{
+    font-size: 3cap;
+    margin: 0 0 20px;
+}

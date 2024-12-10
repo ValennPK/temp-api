@@ -25,9 +25,9 @@
     <article>
         <livewire:Auth.Register />
     </article>
-    <article>
+    {{-- <article>
         <livewire:Auth.Login />
-    </article>
+    </article> --}}
 </main>
 {{-- --------------------------- --}}
 

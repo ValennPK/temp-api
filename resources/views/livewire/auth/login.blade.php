@@ -7,7 +7,7 @@
 
     <form wire:submit.prevent="login" class="authform">
         @csrf
-        <H2>Iniciar Sesión</H2>
+        <h2 class="authform_h2">Iniciar Sesión</h2>
         <div class="authform_div">
             <label for="email">Email:</label>
             <input class="authform_div-input" type="email" id="email" wire:model="email" required>

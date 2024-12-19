@@ -8,22 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Temperature extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     protected $fillable = [
-        'port1',
-        'port2',
-        'port3',
-        'port4',
-        'port5',
-        'port6',
-        'port7',
-        'port8',
+        'thermometer_id',
+        'sensor_id',
+        'value',
     ];
-
-    // Método para asignar la tabla dinámicamente
-    public function setTableName($sensorName)
-    {
-        $this->setTable($sensorName);
-    }
 }

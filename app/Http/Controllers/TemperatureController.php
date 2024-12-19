@@ -15,10 +15,6 @@ class TemperatureController extends Controller
     public function store(Request $request, $ThermometerName)
     {
 
-        $request->validate([
-            'port*' => 'nullable|numeric',
-        ]);
-
         TableService::thermometerTableCheck($ThermometerName);
 
         StoreService::storeTemperature($ThermometerName, $request);
@@ -30,10 +26,6 @@ class TemperatureController extends Controller
 
     public function mass_store(Request $request, $ThermometerName)
     {
-
-        $request->validate([
-            'dato*' => 'nullable|numeric',
-        ]);
 
         TableService::thermometerTableCheck($ThermometerName);
 

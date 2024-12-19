@@ -30,6 +30,8 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->post('/{ThermometerName}/temperatures', [TemperatureController::class, 'store']);
 
+Route::middleware('auth:sanctum')->post('/{ThermometerName}/mass_temperatures', [TemperatureController::class, 'mass_store']);
+
 Route::get('/data/index/{ThermometerName}/{days}', [TemperatureController::class, 'index']);
 
 Route::get('/data/index/{ThermometerName}/{days}/{PortName}', [TemperatureController::class, 'index_port']);

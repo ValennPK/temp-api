@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\Schema;
 use App\Services\TableService;
 use App\Services\StoreService;
 
-use function PHPUnit\Framework\isEmpty;
-
 class TemperatureController extends Controller
 {
     public function store(Request $request, $ThermometerName)
@@ -17,9 +15,9 @@ class TemperatureController extends Controller
 
         TableService::thermometerTableCheck($ThermometerName);
 
-        StoreService::storeTemperature($ThermometerName, $request);
-
         TableService::setpointRegisterCheck($ThermometerName);
+
+        StoreService::storeTemperature($ThermometerName, $request);
 
         return response()->json(['message'=>'Temperature stored successfully'], 201);
     }

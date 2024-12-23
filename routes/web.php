@@ -1,6 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Auth\Register;
+use App\Livewire\Auth\Login;
+use Illuminate\Support\Facades\Auth;
+
+Route::get('/register', Register::class)->name('register');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +19,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('web')->group(function () {
-    Route::view('/', 'welcome');
+// Route::middleware('web')->group(function () {
+//     Route::view('/', 'livewire.index')->redirectTo('/login');
+// });
+
+Route::get('/', function () {
+    return redirect('/login');
 });
+
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

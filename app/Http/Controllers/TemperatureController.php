@@ -4,97 +4,34 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\SetpointHysteresis;
-use App\Models\Excursion;
+use App\Services\TableService;
+use App\Services\StoreService;
 
 class TemperatureController extends Controller
 {
     public function store(Request $request, $ThermometerName)
     {
 
-        $validatedData = $request->validate([
-            'port1' => 'numeric',
-            'port2' => 'numeric',
-            'port3' => 'numeric',
-            'port4' => 'numeric',
-            'port5' => 'numeric',
-            'port6' => 'numeric',
-            'port7' => 'numeric',
-            'port8' => 'numeric',
-        ]);
+        TableService::thermometerTableCheck($ThermometerName);
 
-        
-        if (!Schema::hasTable($ThermometerName)) {
-            Schema::create($ThermometerName, function (Blueprint $table) {
-                $table->id();
-                $table->decimal('port1', 6, 3)->nullable();
-                $table->decimal('port2', 6, 3)->nullable();
-                $table->decimal('port3', 6, 3)->nullable();
-                $table->decimal('port4', 6, 3)->nullable();
-                $table->decimal('port5', 6, 3)->nullable();
-                $table->decimal('port6', 6, 3)->nullable();
-                $table->decimal('port7', 6, 3)->nullable();
-                $table->decimal('port8', 6, 3)->nullable();
-                $table->timestamps();
-                $table->softDeletes();
-            });
-        }
+        TableService::setpointRegisterCheck($ThermometerName);
 
-        DB::table( $ThermometerName)->insert([
-            'port1' => $request->input('port1'),
-            'port2' => $request->input('port2'),
-            'port3' => $request->input('port3'),
-            'port4' => $request->input('port4'),
-            'port5' => $request->input('port5'),
-            'port6' => $request->input('port6'),
-            'port7' => $request->input('port7'),
-            'port8' => $request->input('port8'),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        StoreService::storeTemperature($ThermometerName, $request);
 
+        return response()->json(['message'=>'Temperature stored successfully'], 201);
+    }
 
-        $setpoint = SetpointHysteresis::where('name', $ThermometerName)->first();
+    public function mass_store(Request $request, $ThermometerName)
+    {
 
-        if (!$setpoint) {
-            DB::table('setpoint_hysteresis')->insert([
-                'name' => $ThermometerName,
-                'upper_s1' => 127,
-                'lower_s1' => -127,
-                'upper_s2' => 127,
-                'lower_s2' => -127,
-                'upper_s3' => 127,
-                'lower_s3' => -127,
-                'upper_s4' => 127,
-                'lower_s4' => -127,
-                'upper_s5' => 127,
-                'lower_s5' => -127,
-                'upper_s6' => 127,
-                'lower_s6' => -127,
-                'upper_s7' => 127,
-                'lower_s7' => -127,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
+        TableService::thermometerTableCheck($ThermometerName);
 
-        // foreach ($validatedData as $port => $value) {
-        //     if ($value > $setpoint->upper_limit || $value < $setpoint->lower_limit) {
-        //         DB::table('excursions')->insert([
-        //             'thermometer_name' => $ThermometerName,
-        //             'port_name' => $port,
-        //             'value' => $value,
-        //             'created_at' => now(),
-        //             'updated_at' => now(),
-        //         ]);
-        //     }
-        // }
+        TableService::setpointRegisterCheck($ThermometerName);
 
+        StoreService::storeMassTemperature($ThermometerName, $request);
 
-
-        return response()->json($validatedData, 201);
+        return response()->json(['message'=>'Multiple temperature stored successfully'], 201);
     }
 
     public function index($ThermometerName, $days)
@@ -214,4 +151,3 @@ class TemperatureController extends Controller
         return response()->json($response, 200);
     }
 }
-

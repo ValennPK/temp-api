@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TemperatureController;
 use App\Http\Controllers\SetpointHysteresisController;
@@ -28,7 +27,11 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 
-Route::middleware('auth:sanctum')->post('/{ThermometerName}/temperatures', [TemperatureController::class, 'store']);
+Route::middleware('auth:sanctum')->post('/{ThermometerName}/temperatures', [TemperatureController::class, 'store'])
+    ->middleware('ValidatePortFields');
+
+Route::middleware('auth:sanctum')->post('/{ThermometerName}/mass_temperatures', [TemperatureController::class, 'mass_store'])
+    ->middleware('ValidateDataFields');
 
 Route::get('/data/index/{ThermometerName}/{days}', [TemperatureController::class, 'index']);
 

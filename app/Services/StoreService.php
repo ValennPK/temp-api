@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class StoreService
 {
-    public static function storeTemperature($ThermometerName, Request $request)
+    public static function storeTemperature($ThermometerName, Request $request, $i)
     {
         DB::table( $ThermometerName)->insert([
             'port1' => $request->input('port1'),
@@ -18,6 +18,22 @@ class StoreService
             'port6' => $request->input('port6'),
             'port7' => $request->input('port7'),
             'port8' => $request->input('port8'),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
+
+    public static function seederTemperature($ThermometerName, $i)
+    {
+        DB::table($ThermometerName)->insert([
+            'port1' => $i,
+            'port2' => $i,
+            'port3' => $i,
+            'port4' => $i,
+            'port5' => $i,
+            'port6' => $i,
+            'port7' => $i,
+            'port8' => $i,
             'created_at' => now(),
             'updated_at' => now(),
         ]);

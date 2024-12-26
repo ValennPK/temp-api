@@ -14,6 +14,14 @@
                         </div>
                     @endif
 
+                    <div class="card-body">
+                        @livewire('list-thermometers')
+                    </div>
+                    
+                    <div class="card-body">
+                        @livewire('list-users')
+                    </div>
+
                     {{ __('You are logged in!') }}
                 </div>
             </div>

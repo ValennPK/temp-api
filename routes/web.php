@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\Auth\Register;
 use App\Livewire\Auth\Login;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ThermometersController;
+use App\Models\Thermometer;
 
 Route::get('/register', Register::class)->name('register');
 
@@ -31,3 +33,5 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/thermometers')->name('thermometers', [ThermometersController::class, 'index']);

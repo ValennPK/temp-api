@@ -1,4 +1,5 @@
 <div>
+    <h3>{{$role}}</h3>
     <h3>Your list of Thermometers</h3>
     <table class="table table-bordered">
         <thead>
@@ -9,14 +10,13 @@
             </tr>
         </thead>
         <tbody>
-            @dd($user)
-            {{-- @foreach ($thermometers as $thermometer)
+            @foreach ($thermometers as $thermometer)
                 <tr>
                     <td>{{ $thermometer->id }}</td>
                     <td>{{ $thermometer->username }}</td>
                     <td>{{ $thermometer->created_at }}</td>
                 </tr>
-            @endforeach --}}
+            @endforeach
         </tbody>
     </table>
 </div>

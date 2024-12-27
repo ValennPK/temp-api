@@ -9,13 +9,14 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($thermometers as $thermometer)
+            @dd($user)
+            {{-- @foreach ($thermometers as $thermometer)
                 <tr>
                     <td>{{ $thermometer->id }}</td>
                     <td>{{ $thermometer->username }}</td>
                     <td>{{ $thermometer->created_at }}</td>
                 </tr>
-            @endforeach
+            @endforeach --}}
         </tbody>
     </table>
 </div>

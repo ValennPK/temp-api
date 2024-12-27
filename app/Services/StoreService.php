@@ -23,22 +23,6 @@ class StoreService
         ]);
     }
 
-    public static function seederTemperature($ThermometerName, $i)
-    {
-        DB::table($ThermometerName)->insert([
-            'port1' => $i,
-            'port2' => $i,
-            'port3' => $i,
-            'port4' => $i,
-            'port5' => $i,
-            'port6' => $i,
-            'port7' => $i,
-            'port8' => $i,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-    }
-
     public static function storeMassTemperature($ThermometerName, Request $request)
     {
         foreach ($request->all() as $key => $value) {

@@ -2,13 +2,12 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Thermometer;
 use Illuminate\Support\Facades\Hash;
-use app\Services\TableService;
-use app\Services\StoreService;
-use Illuminate\Contracts\Cache\Store;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 
 class ThermometerSeeder extends Seeder
 {
@@ -35,13 +34,38 @@ class ThermometerSeeder extends Seeder
             'has_permission' => true
         ]);
 
-        $thermometers = Thermometer::all();
+        $thermometers = Thermometer::pluck('username');
+
 
         foreach ($thermometers as $thermometer) {
-            TableService::thermometerTableCheck($thermometer);
-            TableService::setpointRegisterCheck($thermometer);
-            for ($i = 0; $i < 10; $i++) {
-                StoreService::seederTemperature($thermometer, $i);
+            if (!Schema::hasTable($thermometer)) {
+                Schema::create($thermometer, function (Blueprint $table) {
+                    $table->id();
+                    $table->decimal('port1', 6, 3)->nullable();
+                    $table->decimal('port2', 6, 3)->nullable();
+                    $table->decimal('port3', 6, 3)->nullable();
+                    $table->decimal('port4', 6, 3)->nullable();
+                    $table->decimal('port5', 6, 3)->nullable();
+                    $table->decimal('port6', 6, 3)->nullable();
+                    $table->decimal('port7', 6, 3)->nullable();
+                    $table->decimal('port8', 6, 3)->nullable();
+                    $table->timestamps();
+                    $table->softDeletes();
+                });
+            }
+            for ($i = 1; $i <= 10; $i++) {
+                DB::table( $thermometer)->insert([
+                    'port1' => $i,
+                    'port2' => $i,
+                    'port3' => $i,
+                    'port4' => $i,
+                    'port5' => $i,
+                    'port6' => $i,
+                    'port7' => $i,
+                    'port8' => $i,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
             }
         }
 

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class StoreService
 {
-    public static function storeTemperature($ThermometerName, Request $request, $i)
+    public static function storeTemperature($ThermometerName, Request $request)
     {
         DB::table( $ThermometerName)->insert([
             'port1' => $request->input('port1'),

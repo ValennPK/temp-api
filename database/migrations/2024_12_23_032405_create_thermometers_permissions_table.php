@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('thermometers_permissions', function (Blueprint $table) {
+        Schema::create('thermometer_permissions', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
             $table->integer('thermometer_id');

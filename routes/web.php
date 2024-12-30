@@ -29,9 +29,10 @@ Route::get('/', function () {
     return redirect('/login');
 });
 
-
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/thermometers')->name('thermometers', [ThermometersController::class, 'index']);
+Route::get('/thermometers/{ThermometerName}', function ($ThermometerName) {
+    return view('thermometers.index', compact('ThermometerName'));
+});

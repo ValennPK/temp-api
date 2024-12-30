@@ -13,7 +13,7 @@
             @foreach ($thermometers as $thermometer)
                 <tr>
                     <td>{{ $thermometer->id }}</td>
-                    <td>{{ $thermometer->username }}</td>
+                    <td><a href="/thermometer/{{ $thermometer->username }}">{{ $thermometer->username }}</a></td>
                     <td>{{ $thermometer->created_at }}</td>
                 </tr>
             @endforeach

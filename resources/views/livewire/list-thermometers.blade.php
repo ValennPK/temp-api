@@ -10,13 +10,19 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($thermometers as $thermometer)
+            @if (!$thermometers)
+                <tr>
+                    <td colspan="3">No data available in this table.</td>
+                </tr>
+            @else
+                @foreach ($thermometers as $thermometer)
                 <tr>
                     <td>{{ $thermometer->id }}</td>
                     <td><a href="/thermometer/{{ $thermometer->username }}">{{ $thermometer->username }}</a></td>
                     <td>{{ $thermometer->created_at }}</td>
                 </tr>
-            @endforeach
+                @endforeach
+            @endif
         </tbody>
     </table>
 </div>

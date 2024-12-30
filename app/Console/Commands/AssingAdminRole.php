@@ -12,7 +12,7 @@ class AssingAdminRole extends Command
      *
      * @var string
      */
-    protected $signature = 'app:assingadminrole';
+    protected $signature = 'app:assing-admin {email}';
 
     /**
      * The console command description.
@@ -26,9 +26,9 @@ class AssingAdminRole extends Command
      */
     public function handle()
     {
-        $username = $this->argument('username');
+        $email = $this->argument('email');
 
-        $user = User::where('username', $username)->first();
+        $user = User::where('email', $email)->first();
 
         if (!$user) {
             $this->error('User not found.');

@@ -15,9 +15,9 @@
                     @endif
 
                     <div class="card-body">
-                        @livewire('show-thermometer')
+                        @livewire('list-temperatures', ['thermometerName' => $thermometerName])
                     </div>
-                    
+
                     {{ __('You are logged in!') }}
                 </div>
             </div>

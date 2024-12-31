@@ -1,9 +1,14 @@
 <div>
     @if ($data)
     <h3>Datos del Termómetro: {{ $thermometerName }}</h3>
-    <button wire:click="toggleList" class="btn btn-primary mb-3">
-        {{ $showList ? 'Ocultar' : 'Mostrar' }}
-    </button>
+    <div>
+        <button wire:click="toggleList" class="btn btn-primary mb-3">
+            {{ $showList ? 'Ocultar' : 'Mostrar' }}
+        </button>
+        <button href="{{ url('/') }}" class="btn btn-primary mb-3">
+            Volver
+        </button>
+    </div>
         @if ($showList)
         <table class="table table-bordered">
             <thead>

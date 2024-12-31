@@ -6,7 +6,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
-class ShowTemperatures extends Component
+class ListTemperatures extends Component
 {
     public $thermometerName;
     public $data;
@@ -25,14 +25,13 @@ class ShowTemperatures extends Component
         }
     }
 
-    public function toggleList() {
+    public function toggleList()
+    {
         $this->showList = !$this->showList;
     }
-    
+
     public function render()
     {
-        return view('livewire.show-temperatures', [
-            'data' => $this->data
-        ]);
+        return view('livewire.list-temperatures');
     }
 }

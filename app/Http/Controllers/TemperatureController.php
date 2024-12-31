@@ -151,4 +151,10 @@ class TemperatureController extends Controller
 
         return response()->json($response, 200);
     }
+
+    public function show($thermometerName)
+    {
+        return view('thermometer.temperatures', compact('thermometerName'));
+    }
+
 }

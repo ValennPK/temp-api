@@ -17,8 +17,6 @@
                     <div class="card-body">
                         @livewire('list-temperatures', ['thermometerName' => $thermometerName])
                     </div>
-
-                    {{ __('You are logged in!') }}
                 </div>
             </div>
         </div>

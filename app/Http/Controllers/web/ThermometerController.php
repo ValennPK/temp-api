@@ -9,6 +9,6 @@ class ThermometerController extends Controller
 {
 
     public function showTemperatures($thermometerName) {
-        return view('thermometers.temperatures', compact('thermometerName'));
+        return view('thermometers.temperatures', ['thermometerName' => $thermometerName]);
     }
 }

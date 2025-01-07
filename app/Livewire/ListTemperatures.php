@@ -3,15 +3,18 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
 class ListTemperatures extends Component
 {
+    use WithPagination;
+
     public $thermometerName;
     public $data;
     public $message;
-    public $recordsPerPage = 100;
+    public $recordsPerPage = 25;
     public $startDate;
     public $endDate;
     public $startTimeFilter;
@@ -64,13 +67,13 @@ class ListTemperatures extends Component
             $query->whereTime('created_at', '<=', $this->endTimeFilter);
         }
 
-        $query->orderBy('created_at', 'desc');
-
         $this->data = $query->limit($this->recordsPerPage)->get();
     }
 
     public function render()
     {
-        return view('livewire.list-temperatures');
+        return view('livewire.list-temperatures', [
+            'data' => $this->data
+        ]);
     }
 }

@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\web\ThermometerController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use app\Livewire\TestTemperatures;
 
 Route::get('/', function () {return redirect('/login');});
 
@@ -13,7 +13,8 @@ Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::get('/thermometer/{thermometerName}', [ThermometerController::class, 'showTemperatures']);
+Route::get('/test-temperatures/{thermometerName}', [ThermometerController::class, 'showTemperatures']);
+
 
 // Route::get('/email/verify', function () {
 //     return view('auth.verify-email');

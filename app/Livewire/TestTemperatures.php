@@ -7,27 +7,27 @@ use Livewire\WithPagination;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
-class ListTemperatures extends Component
+class TestTemperatures extends Component
 {
     use WithPagination;
 
     public $thermometerName;
     public $data;
     public $message;
-    public $recordsPerPage = 10;
+    public $recordsPerPage = 25;
     public $startDate;
     public $endDate;
     public $startTimeFilter;
     public $endTimeFilter;
     public $showList = false;
-    
-    protected $paginatedData;
 
 
     public function mount($thermometerName)
     {
+        $this->thermometerName = $thermometerName;
+
         if (Schema::hasTable($thermometerName)) {
-            $this->thermometerName = $thermometerName;
+            $this->fetchData();
         } else {
             $this->message = 'Thermometer not found';
             $this->data = [];
@@ -46,7 +46,7 @@ class ListTemperatures extends Component
 
     public function fetchData()
     {
-        $this->recordsPerPage = max(10, min(25, $this->recordsPerPage));
+        $this->recordsPerPage = max(1, min(100, $this->recordsPerPage));
 
         $query = DB::table($this->thermometerName)
             ->orderBy('created_at', 'desc');
@@ -67,17 +67,15 @@ class ListTemperatures extends Component
             $query->whereTime('created_at', '<=', $this->endTimeFilter);
         }
 
-        return $query;
+        @dd($query);
+
+        return $query->paginate(25);
     }
+    
 
     public function render()
     {
-        $paginatedData = $this->fetchData()->paginate($this->recordsPerPage);
-        // @dd($data);
-
-        return view('livewire.list-temperatures', [
-            'paginatedData' => $paginatedData
-        ]);
+        $data = $this->fetchData();
+        return view('livewire.test-temperatures', ['data' => $data]);
     }
 }
-

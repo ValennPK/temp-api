@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\User;
 
-class AssingAdmin extends Command
+class AssingAdminRole extends Command
 {
     /**
      * The name and signature of the console command.

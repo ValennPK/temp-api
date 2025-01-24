@@ -13,7 +13,8 @@ Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::get('/test-temperatures/{thermometerName}', [ThermometerController::class, 'showTemperatures']);
+Route::get('/thermometer/{thermometerName}', [ThermometerController::class, 'showTemperatures']);
+
 
 
 // Route::get('/email/verify', function () {

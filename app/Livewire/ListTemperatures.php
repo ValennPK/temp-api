@@ -6,12 +6,16 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ThermometerPermission;
+use App\Models\Thermometer;
 
 class ListTemperatures extends Component
 {
     use WithPagination;
 
     public $thermometerName;
+    public $hasPermission = false;
     public $data;
     public $message;
     public $recordsPerPage = 10;
@@ -19,25 +23,46 @@ class ListTemperatures extends Component
     public $endDate;
     public $startTimeFilter;
     public $endTimeFilter;
-    public $showList = false;
-    
-    protected $paginatedData;
+    public $showList = true;
 
 
     public function mount($thermometerName)
     {
-        if (Schema::hasTable($thermometerName)) {
-            $this->thermometerName = $thermometerName;
-        } else {
-            $this->message = 'Thermometer not found';
-            $this->data = [];
+        if (Auth::check()) {
+            if (Schema::hasTable($thermometerName)) {
+                if (Auth::user()->hasRole('admin')) {
+                    $this->thermometerName = $thermometerName;
+                    $this->hasPermission = true;
+                }
+
+                else {
+                    $user_permissions = ThermometerPermission::where('user_id', Auth::user()->id)->pluck('thermometer_id');
+                    $thermometer = Thermometer::where('username', $thermometerName)->pluck('id')->first();
+                
+                    if ($user_permissions->contains($thermometer)) {
+                        $this->thermometerName = $thermometerName;
+                        $this->hasPermission = true;
+                    }
+                    else {
+                        $this->message = 'You do not have permission to view this thermometer';
+                        $this->hasPermission = false;
+                    }
+                }
+            }
+
+            else {
+                $this->message = 'Thermometer not found';
+                $this->hasPermission = false;
+            }
         }
+
+        else {
+            $this->message = 'You are not logged in';
+            $this->hasPermission = false;
+        }
+
     }
 
-    public function UpdateList()
-    {
-        $this->fetchData();
-    }
 
     public function toggleList()
     {
@@ -72,12 +97,29 @@ class ListTemperatures extends Component
 
     public function render()
     {
+        if (!$this->hasPermission) {
+            return view('livewire.list-temperatures', [
+                'message' => 'Thermometer not found',
+                'paginatedData' => null
+            ]);
+        }
+        
         $paginatedData = $this->fetchData()->paginate($this->recordsPerPage);
-        // @dd($data);
-
+    
         return view('livewire.list-temperatures', [
-            'paginatedData' => $paginatedData
+            'paginatedData' => $paginatedData,
+            'message' => null 
         ]);
     }
 }
 
+
+// para modificar la cantidad de registros desde la vista
+
+// <div class="mb-3 d-flex align-items-center">
+// <label for="recordsPerPage" class="form-label me-2"> Cantidad de registros:</label>
+// <input type="number" wire:model="recordsPerPage" id="recordsPerPage" class="form-control me-2" min="10" max="25"  style="width: 100px;" placeholder="Max(100)">
+// <button wire:click="UpdateList" class="btn btn-primary mb-3">
+//     Actualizar
+// </button>
+// </div>

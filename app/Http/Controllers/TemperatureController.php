@@ -35,6 +35,15 @@ class TemperatureController extends Controller
         return response()->json(['message'=>'Multiple temperature stored successfully'], 201);
     }
 
+    public function store_testigo(Request $request, $ThermometerName)
+    {
+        TableService::thermometerTableCheck($ThermometerName);
+
+        StoreService::storeTemperature($ThermometerName, $request);
+
+        return response()->json(['message'=>'Temperature stored successfully'], 201);
+    }
+
     public function index($ThermometerName, $days)
     {
         if (!Schema::hasTable($ThermometerName)) {

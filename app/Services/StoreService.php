@@ -25,12 +25,17 @@ class StoreService
 
     public static function storeMassTemperature($ThermometerName, Request $request)
     {
+        $lastRecord = DB::table($ThermometerName)->latest('created_at')->first();
+        $lastTimestamp = $lastRecord ? strtotime($lastRecord->created_at) : time();
+        
         foreach ($request->all() as $key => $value) {
             if (str_starts_with($key, 'dato') && $value !== null) {
+                $lastTimestamp += 10;
+                
                 DB::table($ThermometerName)->insert([
                     'port1' => $value,
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                    'created_at' => date('Y-m-d H:i:s', $lastTimestamp),
+                    'updated_at' => date('Y-m-d H:i:s', $lastTimestamp),
                 ]);
             }
         }

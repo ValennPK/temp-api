@@ -44,6 +44,14 @@ class TemperatureController extends Controller
         return response()->json(['message'=>'Temperature stored successfully'], 201);
     }
 
+    public function index_testigo($ThermometerName){
+        if (!Schema::hasTable($ThermometerName)) {
+            return response()->json(['message' => 'Thermometer not found'], 404);
+        }
+
+        return DB::table($ThermometerName)->latest('created_at')->get("port1")->first();
+    }
+
     public function index($ThermometerName, $days)
     {
         if (!Schema::hasTable($ThermometerName)) {

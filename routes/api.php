@@ -36,6 +36,8 @@ Route::middleware('auth:sanctum')->post('/{ThermometerName}/mass_temperatures', 
 Route::middleware('auth:sanctum')->post('/{ThermometerName}/testigo', [TemperatureController::class, 'store_testigo'])
     ->middleware('ValidatePortFields');
 
+Route::middleware('auth:sanctum')->get('/{ThermometerName}/testigo', [TemperatureController::class, 'index_testigo']);
+
 Route::get('/data/index/{ThermometerName}/{days}', [TemperatureController::class, 'index']);
 
 Route::get('/data/index/{ThermometerName}/{days}/{PortName}', [TemperatureController::class, 'index_port']);

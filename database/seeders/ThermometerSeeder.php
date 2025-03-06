@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Thermometer;
+use App\Models\thermometer_to_testigo;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -30,6 +31,24 @@ class ThermometerSeeder extends Seeder
 
         Thermometer::create([
             'username' => 'thermometer3',
+            'password' => Hash::make('password123'),
+            'has_permission' => true
+        ]);
+
+        Thermometer::create([
+            'username' => 'testigo1',
+            'password' => Hash::make('password123'),
+            'has_permission' => true
+        ]);
+
+        Thermometer::create([
+            'username' => 'testigo2',
+            'password' => Hash::make('password123'),
+            'has_permission' => true
+        ]);
+
+        Thermometer::create([
+            'username' => 'testigo3',
             'password' => Hash::make('password123'),
             'has_permission' => true
         ]);
@@ -68,6 +87,22 @@ class ThermometerSeeder extends Seeder
                 ]);
             }
         }
+
+        thermometer_to_testigo::create([
+            'thermometer_id' => 1,
+            'testigo_id' => 4
+        ]);
+
+        thermometer_to_testigo::create([
+            'thermometer_id' => 2,
+            'testigo_id' => 5
+        ]);
+
+        thermometer_to_testigo::create([
+            'thermometer_id' => 3,
+            'testigo_id' => 6
+        ]);
+
 
     }
 }

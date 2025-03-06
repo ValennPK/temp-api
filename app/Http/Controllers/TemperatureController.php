@@ -49,7 +49,6 @@ class TemperatureController extends Controller
     public function index_testigo($ThermometerName){
         $thermometer_id = Thermometer::where('username', $ThermometerName)->first()->id;
         $testigo_id = DB::table('thermometer_to_testigos')->where('thermometer_id', $thermometer_id)->first()->testigo_id;
-        // $testigo_id = ThermometerToTestigo::where('thermometer_id', $thermometer_id)->first()->testigo_id;
         $testigo_name = Thermometer::where('id', $testigo_id)->first()->username;
         $lastTemp = DB::table($testigo_name)->latest('created_at')->get("port1")->first();
 

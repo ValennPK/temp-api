@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use App\Services\TableService;
+use App\models\Thermometer;
+use App\models\Thermometer_to_testigo;
 
 use App\Services\StoreService;
 
@@ -45,11 +47,16 @@ class TemperatureController extends Controller
     }
 
     public function index_testigo($ThermometerName){
-        if (!Schema::hasTable($ThermometerName)) {
-            return response()->json(['message' => 'Thermometer not found'], 404);
-        }
+        $thermometer_id = Thermometer::where('username', $ThermometerName)->first()->id;
+        $testigo_id = Thermometer_to_testigo::where('thermometer_id', $thermometer_id)->first()->testigo_id;
+        $testigo_name = Thermometer::where('id', $testigo_id)->first()->username;
+        $lastTemp = DB::table($testigo_name)->latest('created_at')->get("port1")->first();
 
-        return DB::table($ThermometerName)->latest('created_at')->get("port1")->first();
+        if (!$lastTemp) {
+            return response()->json(['message' => 'No data found'], 404);
+        }
+        
+        return $lastTemp;
     }
 
     public function index($ThermometerName, $days)
@@ -71,7 +78,6 @@ class TemperatureController extends Controller
     
         foreach ($temperatures as $temperature) {
             foreach (['port1', 'port2', 'port3', 'port4', 'port5', 'port6', 'port7', 'port8'] as $port) {
-               
                 if ($temperature->{$port} != null) {
                     $allTemperatures[] = [
                         'name' => $ThermometerName,
@@ -85,7 +91,6 @@ class TemperatureController extends Controller
             }
         }
     
-       
         return response()->json($allTemperatures, 200);
     }
 

@@ -10,11 +10,11 @@ class ThermometerToTestigo extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'thermometer_to_testigo';
+    //protected $table = 'thermometer_to_testigo';
 
     protected $fillable = [
-        'thermometer_id',
-        'testigo_id',
+        'thermometer',
+        'testigo',
     ];
 
 

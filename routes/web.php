@@ -4,10 +4,11 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\web\ThermometerController;
 use App\Http\Controllers\HomeController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use app\Livewire\TestTemperatures;
 
-Route::get('/', function () {return redirect('/login');});
+Route::view('/', 'public.inicio')->name('inicio');
+Route::view('/vision-mision', 'public.vision-mision')->name('vision-mision');
+Route::view('/quienes-somos', 'public.quienes-somos')->name('quienes-somos');
+Route::view('/servicios', 'public.servicios')->name('servicios');
 
 Auth::routes();
 

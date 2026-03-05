@@ -46,6 +46,10 @@ Route::get('/data/last/{ThermometerName}', [TemperatureController::class, 'last'
 
 Route::get('/data/last/{ThermometerName}/{PortName}', [TemperatureController::class, 'last_port']);
 
+Route::get('/data/latest/{ThermometerName}', [TemperatureController::class, 'latest_ports']);
+
+Route::get('/data/latest/{ThermometerName}/{PortName}', [TemperatureController::class, 'latest_port']);
+
 
 Route::middleware('auth:sanctum')->get('/{ThermometerName}/setpoints', [SetpointHysteresisController::class, 'index']);
 
@@ -53,4 +57,3 @@ Route::middleware('auth:sanctum')->post('/{ThermometerName}/setpoints', [Setpoin
 
 
 Route::get('/stat/{ThermometerName}/{days}', [StatController::class, 'index']);
-

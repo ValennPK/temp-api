@@ -95,3 +95,44 @@ it('requiere autenticacion sanctum en endpoints protegidos de temperatura', func
     $this->postJson('/api/sensor_a/temperatures', ['port1' => 22])
         ->assertUnauthorized();
 });
+
+it('mantiene un snapshot con la ultima lectura de cada puerto', function () {
+    $thermometer = createThermometer(['username' => 'sensor_a'], true);
+    Sanctum::actingAs($thermometer, ['*']);
+
+    $this->postJson('/api/sensor_a/temperatures', [
+        'port1' => 20.5,
+        'port2' => 30.2,
+    ])->assertCreated();
+
+    $this->postJson('/api/sensor_a/temperatures', [
+        'port1' => 21.7,
+    ])->assertCreated();
+
+    $this->getJson('/api/data/latest/sensor_a')
+        ->assertOk()
+        ->assertJsonPath('name', 'sensor_a')
+        ->assertJsonPath('ports.port1.valor', 21.7)
+        ->assertJsonPath('ports.port2.valor', 30.2);
+
+    $this->getJson('/api/data/latest/sensor_a/port1')
+        ->assertOk()
+        ->assertJsonPath('name', 'sensor_a')
+        ->assertJsonPath('port', 'port1')
+        ->assertJsonPath('valor', 21.7);
+});
+
+it('actualiza snapshot de port1 con carga masiva', function () {
+    $thermometer = createThermometer(['username' => 'sensor_a'], true);
+    Sanctum::actingAs($thermometer, ['*']);
+
+    $this->postJson('/api/sensor_a/mass_temperatures', [
+        'dato1' => 10.1,
+        'dato2' => 10.2,
+        'dato3' => 10.3,
+    ])->assertCreated();
+
+    $this->getJson('/api/data/latest/sensor_a/port1')
+        ->assertOk()
+        ->assertJsonPath('valor', 10.3);
+});

@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use App\Services\TableService;
-use App\models\Thermometer;
-use App\models\ThermometerToTestigo;
+use App\Models\Thermometer;
+use App\Models\ThermometerToTestigo;
 
 use App\Services\StoreService;
 
@@ -177,6 +177,73 @@ class TemperatureController extends Controller
     public function show($thermometerName)
     {
         return view('thermometer.temperatures', compact('thermometerName'));
+    }
+
+    public function latest_ports($ThermometerName)
+    {
+        $thermometer = Thermometer::where('username', $ThermometerName)->first();
+        if (!$thermometer) {
+            return response()->json(['message' => 'El termometro no existe'], 404);
+        }
+
+        $latest = DB::table('thermometer_latest')
+            ->where('thermometer_id', $thermometer->id)
+            ->first();
+
+        if (!$latest) {
+            return response()->json(['message' => 'No se encontraron datos'], 404);
+        }
+
+        $ports = [];
+        foreach (range(1, 8) as $index) {
+            $value = $latest->{"port{$index}_value"};
+            $ports["port{$index}"] = [
+                'valor' => $value !== null ? (float) $value : null,
+                'read_at' => $latest->{"port{$index}_read_at"},
+            ];
+        }
+
+        return response()->json([
+            'name' => $ThermometerName,
+            'ports' => $ports,
+            'updated_at' => $latest->updated_at,
+        ], 200);
+    }
+
+    public function latest_port($ThermometerName, $PortName)
+    {
+        $validPorts = array_map(fn ($index) => "port{$index}", range(1, 8));
+        if (!in_array($PortName, $validPorts, true)) {
+            return response()->json(['message' => 'La columna no existe'], 404);
+        }
+
+        $thermometer = Thermometer::where('username', $ThermometerName)->first();
+        if (!$thermometer) {
+            return response()->json(['message' => 'El termometro no existe'], 404);
+        }
+
+        $latest = DB::table('thermometer_latest')
+            ->where('thermometer_id', $thermometer->id)
+            ->first();
+
+        if (!$latest) {
+            return response()->json(['message' => 'No se encontraron datos'], 404);
+        }
+
+        $valueColumn = "{$PortName}_value";
+        $readAtColumn = "{$PortName}_read_at";
+
+        if ($latest->{$valueColumn} === null) {
+            return response()->json(['message' => 'No se encontraron datos para el puerto'], 404);
+        }
+
+        return response()->json([
+            'name' => $ThermometerName,
+            'port' => $PortName,
+            'valor' => (float) $latest->{$valueColumn},
+            'read_at' => $latest->{$readAtColumn},
+            'updated_at' => $latest->updated_at,
+        ], 200);
     }
 
 }

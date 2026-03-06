@@ -115,6 +115,8 @@ services:
             PMA_HOST: mysql
             PMA_PORT: 3306
             PMA_ARBITRARY: 0
+            PMA_USER: '${DB_USERNAME}'
+            PMA_PASSWORD: '${DB_PASSWORD}'
             PMA_ABSOLUTE_URI: 'http://localhost:8081/'
         volumes:
             - './docker/phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php'
